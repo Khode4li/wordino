@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  wordino:
+    image: wordino:1.0
+    ports:
+      - "9000:80"
+
+  pma:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "9001:80"
+    environment:
+      PMA_HOST: mariadb
+      MYSQL_ROOT_PASSWORD: some-random-password
+
+  mariadb:
+    image: mariadb
+    ports:
+      - "9002:3306"
+    volumes:
+      - ./wd-data:/docker-entrypoint-initdb.d
+      - ./database:/var/lib/mysql
+    environment:
+      MARIADB_DATABASE: wordino
+      MARIADB_ROOT_PASSWORD: some-random-password
