@@ -16,6 +16,7 @@ class DatabaseConnection{
                     'database' => DB_NAME,
                     'username' => DB_USER,
                     'password' => DB_PASS,
+                    'port' => DB_PORT,
                 ]);
             }catch (\Exception $e){
                 rJSON(false,503,'Database Connection Error');
