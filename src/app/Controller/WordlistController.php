@@ -907,7 +907,7 @@ ORDER BY words.points DESC;",
             ])->fetchAll();
 
         $random_name = rand(10000,99999);
-        $file_addr = HOME.DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.$random_name.".txt";
+        $file_addr = HOME.'public'.DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.$random_name.".txt";
         $file = fopen($file_addr, "w");
 
         foreach ($wordlist as $value) {
