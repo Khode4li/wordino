@@ -26,6 +26,8 @@ apt install zip -y
 # Run Composer
 RUN composer install --no-interaction
 
+RUN chown -R www-data:www-data /var/www/html/public/files
+
 # Expose port 80 for web traffic
 EXPOSE 80
 
