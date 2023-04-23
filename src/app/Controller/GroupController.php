@@ -500,6 +500,52 @@ ORDER BY words.points DESC;", [
     }
 
 
+    /**
+     * @OA\Get(
+     *     path="/groups/getWordsFile/{id}",
+     *     summary="Get wordsFile for a group",
+     *     description="Retrieve a list of distinct wordsFile associated with a group and order them by points.",
+     *     tags={"Groups"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the group to retrieve words for.",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Group not found"
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Internal Server Error"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     *     @OA\Header(
+     *         header="Authorization",
+     *         description="Bearer token",
+     *         @OA\Schema(
+     *             type="string",
+     *             format="Bearer JWT"
+     *         )
+     *     )
+     * )
+     */
+
     public function getWordsFile($vars, $user)
     {
         $user->hasAccess(2);
