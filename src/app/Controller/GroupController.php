@@ -499,4 +499,49 @@ ORDER BY words.points DESC;", [
         die();
     }
 
+
+    public function getWordsFile($vars, $user)
+    {
+        $user->hasAccess(2);
+        $conn = DatabaseConnection::getInstance();
+
+        if (!$conn->has('groups', [
+            'id' => $vars['id']
+        ])) {
+            rJSON(false, 404, 'group not found in database!');
+        }
+
+        $wordlists_id = $conn->query("SELECT DISTINCT(words.word) 
+FROM words, word_wordlist, wordlist_group 
+WHERE 
+    wordlist_group.wordlist_id = word_wordlist.wordlist_id 
+    AND word_wordlist.word_id = words.id 
+    AND wordlist_group.group_id = :id
+ORDER BY words.points DESC;", [
+            ':id' => $vars['id']
+        ])->fetchAll();
+
+
+        $random_name = rand(10000,99999);
+        $file_addr = HOME.'public'.DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.$random_name.".txt";
+        $file = fopen($file_addr, "w");
+
+        foreach ($wordlists_id as $value) {
+            fwrite($file, $value['word'] . "\n");
+        }
+        fclose($file);
+
+        $group_name = $conn->get('groups', 'group_name', [
+            'id' => $vars['id']
+        ]);
+
+
+        header('Content-Type: application/octet-stream');
+        header('Content-Length: ' . filesize($file_addr));
+        header('Content-Disposition: inline; filename="' . $group_name . '.txt"');
+        readfile($file_addr);
+        unlink($file_addr);
+        die();
+    }
+
 }

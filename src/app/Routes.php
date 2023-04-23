@@ -31,6 +31,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
         $r->post('/newGroup', 'GroupController@newGroup');
         $r->get('/removeGroup/{id:\d+}', 'GroupController@removeGroup');
         $r->get('/getWords/{id:\d+}', 'GroupController@getWords');
+        $r->get('/getWordsFile/{id:\d+}', 'GroupController@getWordsFile');
         $r->get('/list', 'GroupController@list');
         $r->get('/info/{id:\d+}', 'GroupController@info');
     });
