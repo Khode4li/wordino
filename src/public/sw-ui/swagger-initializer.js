@@ -4,8 +4,9 @@ window.onload = function() {
   // the following lines will be replaced by docker/configurator, when it runs in a docker-container
   var currentHost = window.location.hostname;
   var currentProtocol = window.location.protocol;
+  var currentPort = window.location.port;
   window.ui = SwaggerUIBundle({
-    url: currentProtocol+"//"+currentHost+"/sw-ui/"+"sw.json",
+    url: currentProtocol+"//"+currentHost+":"+currentPort+"/sw-ui/"+"sw.json",
     dom_id: '#swagger-ui',
     deepLinking: true,
     presets: [
