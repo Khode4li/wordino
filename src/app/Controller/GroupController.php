@@ -8,7 +8,6 @@ use System\DatabaseConnection;
 class GroupController
 {
 
-
     /**
      * @OA\Post(
      *     path="/groups/newGroup",

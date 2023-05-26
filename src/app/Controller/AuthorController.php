@@ -14,6 +14,80 @@ class AuthorController
 {
 
     /**
+     * @OA\Get(
+     *     path="/authors/myinfo",
+     *     summary="Get Author Info",
+     *     description="Get information",
+     *     tags={"Author"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="is_ok",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="code",
+     *                 type="integer",
+     *                 example=200
+     *             ),
+     *             @OA\Property(
+     *                 property="description",
+     *                 type="string",
+     *                 example="user info"
+     *             ),
+     *             @OA\Property(
+     *                 property="result",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="username",
+     *                     type="string",
+     *                     example="johndoe"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="total_word_count",
+     *                     type="integer",
+     *                     example=100
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     *     @OA\Header(
+     *         header="Authorization",
+     *         description="Bearer token",
+     *         @OA\Schema(
+     *             type="string",
+     *             format="Bearer JWT"
+     *         )
+     *     )
+     * )
+     */
+
+    public function myinfo($vars, $user)
+    {
+        $user->hasAccess(1);
+        $conn = DatabaseConnection::getInstance();
+
+        $username = $user->username;
+
+        $total_word_count = $conn->count('word_author', [
+            'author_id' => $user->id
+        ]);
+
+        rJSON(true, 200, 'user info', [
+            'username' => $username,
+            'total_word_count' => $total_word_count,
+        ]);
+    }
+
+
+    /**
      * @OA\Post(
      *     path="/authors/changePassword",
      *     summary="Change the password for a user",

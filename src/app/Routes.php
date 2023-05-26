@@ -12,6 +12,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
         $r->get('/info/{id:\d+}', 'AuthorController@info');
         $r->post('/changeAccessLevel', 'AuthorController@changeAccessLevel');
         $r->post('/removeUser', 'AuthorController@removeUser');
+        $r->get('/myinfo', 'AuthorController@myinfo');
 
     });
 
