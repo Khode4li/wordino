@@ -39,6 +39,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 
     $r->addGroup('/words', function (\FastRoute\RouteCollector $r) {
         $r->post('/newWord/{wl_id:\d+}', 'WordController@newWord');
+        $r->post('/newWordT/{wl_id:\d+}', 'WordController@newWordT');
         $r->post('/delete', 'WordController@delete');
     });
 

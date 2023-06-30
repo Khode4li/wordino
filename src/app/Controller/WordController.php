@@ -137,6 +137,112 @@ class wordcontroller
 
 
 
+    /**
+     * @OA\Post(
+     *     path="/words/newWordT/{wordlist_id}",
+     *     summary="Add new words to a wordlist",
+     *     tags={"Words"},
+     *     @OA\Parameter(
+     *         name="wordlist_id",
+     *         in="path",
+     *         description="ID of the wordlist",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 required={"words"},
+     *                 @OA\Property(
+     *                     property="words",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="string"
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Words added successfully"
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Bad request"
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     *     @OA\Header(
+     *         header="Authorization",
+     *         description="Bearer token",
+     *         @OA\Schema(
+     *             type="string",
+     *             format="Bearer JWT"
+     *         )
+     *     )
+     * )
+     */
+
+
+    public function newWordT($vars, $user)
+    {
+        $user->hasAccess(1);
+
+        $request_body = file_get_contents('php://input');
+        try {
+            $data = json_decode($request_body, true);
+        }catch (\Exception $e){
+            rJSON(false, 400, 'json is not valid!');
+        }
+
+        if ($data == null){
+            rJSON(false, 400, 'json is not valid!');
+        }
+
+        if (!isset($data['words'][0])){
+            rJSON(false, 400, 'word is not sended!');
+        }
+
+        $conn = DatabaseConnection::getInstance();
+
+        if (!$this->wordlist_exist($vars['wl_id'])){
+            rJSON(false, 400, 'wordlist not exist!');
+        }
+
+        foreach($data['words'] as $word){
+            if ($this->word_exist($word)){
+                $word_id = $conn->get('words', 'id', ['word' => $word]);
+                if (!$this->word_exist_in_wordlist($word_id, $vars['wl_id'])){
+                    $conn->insert('word_wordlist', [
+                        'wordlist_id' => $vars['wl_id'],
+                        'word_id' => $word_id
+                    ]);
+                }
+            } else {
+                $this->addWord($word, $user->id, $vars['wl_id']);
+            }
+        }
+
+        rJSON(true, 200, 'words added to wordlist!');
+
+    }
+
+
 
     /**
      * @OA\Post(
@@ -277,7 +383,6 @@ class wordcontroller
         }
 
         rJSON(true, 200, 'words added to wordlist!');
-
 
     }
 
